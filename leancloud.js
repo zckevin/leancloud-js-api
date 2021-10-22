@@ -1,12 +1,18 @@
-const node_fetch = require("node-fetch");
 const assert = require("assert");
 const dotenv = require("dotenv");
+const jsEnv = require("browser-or-node");
 const debug = require("debug")("leancloud");
 
 dotenv.config();
 
-if (!globalThis.fetch) {
-  globalThis.fetch = node_fetch;
+let fetchFunc;
+if (jsEnv.isNode) {
+  // node-fetch@2, weird exports...
+  const node_fetch = require("node-fetch").default;
+  fetchFunc = node_fetch;
+} else {
+  assert(fetch);
+  fetchFunc = fetch;
 }
 
 function GetEnv() {
@@ -50,7 +56,7 @@ class LeanCloud {
         requests: batches,
       }),
     };
-    const resp = await fetch(endpoint, requestBody);
+    const resp = await fetchFunc(endpoint, requestBody);
     const body = await resp.json();
     // console.log(body);
     if (body.error) {
@@ -138,7 +144,7 @@ class LeanCloud {
         "X-LC-Key": this.config.APP_KEY,
       },
     };
-    const resp = await fetch(url, requestBody);
+    const resp = await fetchFunc(url, requestBody);
     const body = await resp.json();
     if (body.error) {
       throw new Error(
@@ -187,7 +193,7 @@ class LeanCloud {
         "X-LC-Key": this.config.APP_KEY,
       },
     };
-    const resp = await fetch(url, requestBody);
+    const resp = await fetchFunc(url, requestBody);
     const body = await resp.json();
     if (body.error) {
       throw new Error(
@@ -221,7 +227,7 @@ class LeanCloud {
 
     // console.log(url);
 
-    let resp = await fetch(url, {
+    let resp = await fetchFunc(url, {
       method: "GET",
       cache: "no-cache",
       headers: {
@@ -246,7 +252,7 @@ class LeanCloud {
     url.searchParams.append("limit", "1000");
     url.searchParams.append("skip", 0);
 
-    let resp = await fetch(url, {
+    let resp = await fetchFunc(url, {
       method: "GET",
       cache: "no-cache",
       headers: {
