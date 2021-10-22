@@ -1,0 +1,16 @@
+{
+  "name": "leancloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "leancloud.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^4.3.2",
+    "dotenv": "^10.0.0",
+    "node-fetch": "^2.6.5"
+  }
+}
