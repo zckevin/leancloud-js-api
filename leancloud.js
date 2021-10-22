@@ -56,6 +56,7 @@ class LeanCloud {
         requests: batches,
       }),
     };
+    debug("doBatches requestBody", JSON.stringify(requestBody));
     const resp = await fetchFunc(endpoint, requestBody);
     const body = await resp.json();
     // console.log(body);
@@ -66,13 +67,16 @@ class LeanCloud {
         )}, body: ${body}`
       );
     }
-    return body.map((result) => {
+    const finalResult = body.map((result) => {
       if (result.hasOwnProperty("success")) {
         return result.success;
       } else {
+        debug("doBatches error", result);
         return null;
       }
     });
+    debug("doBatches result", JSON.stringify(finalResult));
+    return finalResult;
   }
 
   async batchQueryByIds(ids) {
@@ -81,7 +85,9 @@ class LeanCloud {
         method: "GET",
         path: `/1.1/classes/${this.config.TABLE_NAME}`,
         params: {
-          id,
+          where: {
+            id,
+          },
         },
       };
     });
