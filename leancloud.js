@@ -163,6 +163,7 @@ class LeanCloud {
   }
 
   async FullTextSearch(keyword, genreFilterQuery, pageNum) {
+    keyword = keyword.trim();
     if (!keyword || keyword.length === 0) {
       return {
         list: [],
@@ -170,8 +171,13 @@ class LeanCloud {
     }
     const url = new URL(this.config.SEARCH_ENDPOINT);
 
+    // if user only search one keyword, add double quotes to ask for accurate results
+    if (keyword.indexOf(" ") == -1) {
+      keyword = `"${keyword}"`;
+    }
+
     // search keyword in `title` or `subtile` columns
-    let q = `(title: ${keyword} OR subtitle: ${keyword})`;
+    let q = `((title: ${keyword}) OR (subtitle: ${keyword}))`;
     if (genreFilterQuery) {
       q = `${q} AND ${genreFilterQuery}`;
     }
@@ -182,7 +188,7 @@ class LeanCloud {
     url.searchParams.append("skip", `${50 * pageNum}`);
     // `order` field only supports `scores`, `uploadDate`, ????
     // url.searchParams.append("order", "-uploadDate");
-    url.searchParams.append("order", "createdAt");
+    url.searchParams.append("order", "score");
 
     const requestBody = {
       method: "GET",
