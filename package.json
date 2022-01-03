@@ -1,13 +1,13 @@
 {
-  "name": "leancloud",
-  "version": "1.0.0",
+  "name": "@zckevin/leancloud-simple-rest-api",
+  "version": "0.0.1",
   "description": "",
   "main": "leancloud.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "browser-or-node": "^1.3.0",
     "debug": "^4.3.2",
